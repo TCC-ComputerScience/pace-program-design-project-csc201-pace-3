@@ -1,0 +1,103 @@
+This is a very general overview of my thoughts on approaching the problem. Tomorrow I plan on prototyping and getting the pseudocode worked out
+I think the ship placement function could be challenging to get right and verify it works, but it certainly has an algorithm that can be coded carefully.
+Lastly, I did make use of a pointer in one of the data structures. It may be less efficient to use, but I figured I'd try covering the current material in class as well.
+
+Let me know what you think. 
+
+Data Structures
+
+Starting at the most general, the most obvious structures are the board and ships
+
+As for the overall happenings of the program I see the following events.
+
+	1. Generate board.
+
+	2. Get guesses and provide feedback of hit/miss and update display.
+
+	4. Inform user when a ship is sunk.
+
+	5. Let user know when all ships are sunk.
+
+	6. Restart/exit/reset
+	
+Covering each item in detail here
+
+What datatype should the board and ships be?
+
+I'm thinking for the board we define a custom type called BoardElement or to that affect
+The properties of the board need to reflect the following
+	a. displayed Value
+	b. actual Value //not sure we need this 
+	c. shipPresent
+	d. pointer to shipCoordinate (Defining the ship datatype will clarify why a pointer could be used
+	
+The Ship data type should reflect the following properties
+
+	a. ShipClassification (enum of the following ships: CARRIER, BATTLESHIP, DESTROYER, SUB, TORPEDOBOAT
+	b. bool sunk
+	c. bool orientation (true for vertical false for horizontal) 
+	d. char shipCoordinateArray[] (1D array based on ship size. The pointer to ship coordinate on board will point to this value)
+		//Not sure if this should be dynamically allocated
+		
+Function Details
+
+1. Generate Board()
+    Call GenerateBlankBoard Function
+		Generating the board can use a basic loop iteration to initialize a 2D array of BoardElements
+		Each BoardElement will default to display value of ocean 
+		actualValue will can be also ocean for now
+		shipPresent will be false
+		shipCoordinate* initialized to NULLPTR
+	
+	Call GenerateShips Function()
+		Create each ship variable in main
+	
+	Call Populate Board Function()
+		To populate the board we need an algorithm that can randomly 
+		distribute ships without collisions or going off the board
+		
+		Iterate through the ShipClassifications largest to smallest size
+		Pick Orientation (Horizontal/Vertical)
+		
+			Call PlaceShip()
+				At the very least we know that for horizontal or vertical 
+				we can't place the ship to close to the right or bottom edge
+				After the first ship we need to know what coordinates are possible
+				Alternately we place a ship and test for a collision and restart placement
+				
+				I think it would be possible to create a function that takes the coordinates of each previously 
+				placed ship and returns an array of possible placement coordinates based on whether the ship to be 
+				placed is horizontal or vertical.
+				Assuming this is the case the ship would be placed randomly at the available coordinate
+					Probably still a good idea to test for collision until we are sure the algorithm is sound
+        So somekind of function that takes the placement coordinate of each previous ship and returns an array 1d array of available coordinates to be
+        randomly chosen AvailableCoordinates()
+				Iterate through each BoardElement and assign structure properties
+					shipCoordinate = &Ship.shipArray[i]
+					actualValue = shipArray[i]
+					shipPresent = true
+					displayedValue = ocean (unchanged from blank board generation)
+				
+2. Get guesses and provide feedback
+
+	Call GetGuess() Function
+		Call CheckGuess() Function
+			Go to coordinate check if ship present
+			if true *shipCoordinate = H
+				check all characters in shipArray[]
+				if all are H, then set sunk to true
+				output that the ship was sunk to player
+			actualValue = displayed value
+		
+		Call UpdateScreen() Function
+		
+	Call CheckIfAllSunk() Function
+		Check all ship sunk flags
+		If all are true, then game is over
+		else repeat guessing
+			
+		
+				
+
+	
+
